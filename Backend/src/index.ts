@@ -1,32 +1,10 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
+import { userRouter } from './routes/user';
+import { blogRouter } from './routes/blog';
 
-const app = new Hono()
+const app = new Hono();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.route('/api/v1/user', userRouter);
+app.route('/api/v1/blog', blogRouter);
 
-app.post('/api/v1/signup', (c) => {
-  return c.text("signup");
-})
-
-app.post('/api/v1/signin', (c) => {
-  return c.text("signin");
-})
-
-app.post('/api/v1/blog', (c) => {
-  return c.text("create blog")
-})
-
-app.put('/api/v1/blog', (c) => {
-  return c.text('update blog')
-})
-
-app.get('/api/v1/blog/:id', (c) => {
-  const id = c.req.param('id');
-  console.log(id);
-  return c.text('view blog')
-})
-
-
-export default app
+export default app;
