@@ -21,17 +21,26 @@ userRouter.post('/signup', async(c) => {
     }).$extends(withAccelerate())
     
     try {
-        const user = await prisma.user.create({
-            data: {
-                email: body.email,
-                password: await hashPassword(body.password)
+        const userData = await prisma.user.findFirst({
+            where:{
+                email: body.email
             }
         })
-        const jwtToken = await sign({userId: user.id}, c.env.JWT_SECRET)
-        return c.json({ jwt: jwtToken })
+        if(!userData) {
+            const user = await prisma.user.create({
+                data: {
+                    email: body.email,
+                    password: await hashPassword(body.password)
+                }
+            })
+            const jwtToken = await sign({userId: user.id}, c.env.JWT_SECRET)
+            return c.json({ jwt: jwtToken })
+        }
+        return c.json({message: "User already exits!"}, 409)
     }
     catch(e) {
-        return c.status(403)
+        console.error("Signup Error:", e);
+        return c.json({ error: "Something went wrong!" }, 500);
     }
 })
 
@@ -50,13 +59,13 @@ userRouter.post('/signin', async(c) => {
             }
         });
         if (!user) {
-        c.status(403);
-        return c.json({ error: "User not found!" });
+        return c.json({ error: "User not found!" }, 403);
         }
         const jwtToken = await sign({ userId: user.id }, c.env.JWT_SECRET);
         return c.json({ jwt: jwtToken });
     }
     catch(e) {
-        return c.status(403)
+        console.error("Signin Error:", e);
+        return c.json({ error: "Something went wrong!" }, 500);
     }
 })
