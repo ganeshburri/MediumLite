@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import hashPassword from '../utils/hashpassword';
 import { sign } from 'hono/jwt';
+import { signinInput, signupInput } from "@ganeshvarma1/medium-common";
 
 type CustomContext = {
     Bindings: {
@@ -15,6 +16,10 @@ export const userRouter = new Hono<CustomContext>();
 
 userRouter.post('/signup', async(c) => {
     const body = await c.req.json();
+    const { success } = signupInput.safeParse(body);
+    if(!success) {
+        return c.json({message: "Invalid inputs!"}, 411)
+    }
 
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
@@ -46,7 +51,11 @@ userRouter.post('/signup', async(c) => {
 
 userRouter.post('/signin', async(c) => {
     const body = await c.req.json();
-
+    const { success } = signinInput.safeParse(body);
+    if(!success) {
+        return c.json({message: "Invalid inputs!"}, 411)
+    }
+    
     const prisma = new PrismaClient({
         datasourceUrl: c.env?.DATABASE_URL,
     }).$extends(withAccelerate());
