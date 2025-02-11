@@ -1,0 +1,17 @@
+{
+  "name": "@ganeshvarma1/medium-common",
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "version": "1.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
