@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Avatar } from "./BlogCard"
+import AvatarDropdown from "./Dropdown"
 
 export const AppBar = () => {
     return(
@@ -14,7 +14,7 @@ export const AppBar = () => {
                 text-sm px-5 py-2.5 text-center me-2 mb-2"
                 >Write</button>
                 </Link>
-                <Avatar size="big" name={"Ganesh"} />
+                <AvatarDropdown name={localStorage.getItem("name") || "U"}/>
             </div>
         </div>
     )

@@ -34,8 +34,9 @@ export const Auth = ({type}: AuthProps ) =>{
                     },
                 }
             );
-            const { jwt } = response.data;
+            const { jwt, name } = response.data;
             localStorage.setItem("token", jwt);
+            localStorage.setItem("name", name);
             navigate("/blogs");
         } catch (error) {
             alert("Error while signing");
