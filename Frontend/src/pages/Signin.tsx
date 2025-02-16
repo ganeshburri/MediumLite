@@ -11,5 +11,5 @@ export const Signin = () =>{
                 <Quote/>
             </div>
         </div>
-        )
+    )
 }

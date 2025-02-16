@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import CustomAlert from "../components/CustomAlert";
 
 
 export const Publish = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const navigate = useNavigate();
+    const [alert, setAlert] = useState({message: "", type: ""})
 
     const submitHandler = async () => {
         try {
@@ -20,14 +22,17 @@ export const Publish = () => {
                     Authorization: "Bearer " + localStorage.getItem("token")
                 }
             });
-            navigate(`/blogs/${response.data.id}`);
+            setAlert({message: "Blog published successfully", type: "success"})
+            setTimeout(()=> navigate(`/blogs/${response.data.id}`),2000);
         } catch (error) {
-            alert("Error while posting");
+            // @ts-ignore
+            setAlert({message: error?.response?.data?.message || "Something went wrong, Please try again later!", type: "error"})
             console.log(error);
         }
     };
 
     return(
+        <>
         <div>
             <AppBar/>
             <div className="flex justify-center w-full pt-8 p-2">
@@ -48,6 +53,14 @@ export const Publish = () => {
                 </div>
             </div>
         </div>
+        {alert.message &&
+            <CustomAlert
+                message={alert.message}
+                type={alert.type}
+                onClose={() => setAlert({ message: "", type: "" })}
+            />
+        }
+        </>
     )
 }
 

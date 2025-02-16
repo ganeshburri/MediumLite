@@ -5,6 +5,7 @@ import { SignupInput, SigninInput } from "@ganeshvarma1/medium-common"
 import { Button } from "./Button"
 import axios from "axios";
 const BACKEND_URL:string = import.meta.env.VITE_BACKEND_URL;
+import CustomAlert from "../components/CustomAlert";
 
 type AuthProps = { type: "signup" | "signin" };
 type AuthInputs = SignupInput | SigninInput;
@@ -17,6 +18,7 @@ export const Auth = ({type}: AuthProps ) =>{
             : {email: "", password: ""};
 
     const [postInputs, setPostInputs] = useState<AuthInputs>(initialState);
+    const [alert, setAlert] = useState({message: "", type: ""})
 
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPostInputs((c) => ({
@@ -37,14 +39,17 @@ export const Auth = ({type}: AuthProps ) =>{
             const { jwt, name } = response.data;
             localStorage.setItem("token", jwt);
             localStorage.setItem("name", name);
-            navigate("/blogs");
+            setAlert({message: `${type} success`, type: "success"})
+            setTimeout(()=> navigate("/blogs"),2000);
         } catch (error) {
-            alert("Error while signing");
+            // @ts-ignore
+            setAlert({message: error?.response?.data?.message || "Something went wrong, Please try again later!", type: "error"})
             console.log(error);
         }
     };
 
     return(
+        <>
         <div className="h-screen flex justify-center items-center">
             <div className="flex flex-col justify-center p-2">
                 <div className="p-5">
@@ -65,5 +70,13 @@ export const Auth = ({type}: AuthProps ) =>{
                 <Button label={type === "signup"?"Sign up":"Sign in"} onClick={submitHandler}/>
             </div>
         </div>
+        {alert.message &&
+            <CustomAlert
+                message={alert.message}
+                type={alert.type}
+                onClose={() => setAlert({ message: "", type: "" })}
+            />
+        }
+        </>
     )
 }
