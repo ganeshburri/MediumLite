@@ -1,21 +1,30 @@
+import { AppBar } from "../components/AppBar"
 import { BlogCard } from "../components/BlogCard"
+import { useBlogs } from "../hooks"
 
 export const Blogs = () => {
+    const {loading, blogs} = useBlogs();
+    if(loading) {
+        return <div>
+            Loading...
+        </div>
+    }
     return(
-        <div className="flex justify-center">
-            <div className="max-w-xl">
-                <BlogCard authorName="Ganesh" title="How an agly website makes $500 per month without affiliate marking" 
-                content="How an agly website makes $500 per month without affiliate marking"
-                publishedDate="04-23-2000"/>
-                <BlogCard authorName="Ganesh" title="How an agly website makes $500 per month without affiliate marking" 
-                content="How an agly website makes $500 per month without affiliate marking"
-                publishedDate="04-23-2000"/>
-                <BlogCard authorName="Ganesh" title="How an agly website makes $500 per month without affiliate marking" 
-                content="How an agly website makes $500 per month without affiliate marking"
-                publishedDate="04-23-2000"/>
-                <BlogCard authorName="Ganesh" title="How an agly website makes $500 per month without affiliate marking" 
-                content="How an agly website makes $500 per month without affiliate marking"
-                publishedDate="04-23-2000"/>
+        <div>
+            <AppBar/>
+            <div className="flex justify-center">
+            <div>
+                {blogs.map(blog =>
+                        <BlogCard 
+                            id = {blog.id}
+                            key={blog.id}
+                            authorName={blog.author.name || "Anonymous"}
+                            title={blog.title} 
+                            content={blog.content}
+                            publishedDate="14 feb 2025"
+                        />)
+                }
+            </div>
             </div>
         </div>
     )
